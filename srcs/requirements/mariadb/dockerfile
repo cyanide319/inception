@@ -1,9 +1,8 @@
 
 
 FROM		alpine:3.17
-RUN			apk update && apk upgrade && apk add	\
+RUN			apk update && apk upgrade && apk --no-cache add	\
 							sudo			\
-							openssl			\
 							mariadb			\
 							curl
 # RUN			rm -f /etc/nginx/nginx.conf
