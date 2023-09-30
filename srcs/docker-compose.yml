@@ -1,5 +1,6 @@
 version: "3.5"
 services:
+
   nginx:
     build:
       context: requirements/nginx
@@ -11,7 +12,9 @@ services:
     environment:
       - .env
     volumes:
-      - ./requirements/wordpress/www/:/var/www/html/
+      - ./requirements/wordpress/volume/www/:/var/www/html/
+    networks:
+      - inception
     restart: always
 
   mariadb:
@@ -20,19 +23,31 @@ services:
       dockerfile: dockerfile
     image: mariadb-inception
     container_name: mariadb-inception
-    # ports:
-    #   - "443:443"
-    # environment:
-    #   - .env
-    # restart: always
+    environment:
+      - .env
+    volumes:
+      - ./requirements/mariadb/volume/:/var/lib/
+    networks:
+      - inception
+    restart: always
 
-  # wordpress:
-  #   build:
-  #     context: ./requirements/wordpress
-  #     dockerfile: dockerfile
-  #   container_name: wordpress
-  #   ports:
-  #     - "443:443"
-  #   environment:
-  #     - .env
-    # restart: always
+
+  wordpress:
+    build:
+      context: requirements/wordpress
+      dockerfile: dockerfile
+    image: wordpress-inception
+    container_name: wordpress-inception
+    environment:
+      - .env
+    volumes:
+      - ./requirements/wordpress/volume/:/var/www/html/
+    networks:
+      - inception
+    restart: always
+
+networks:
+    inception:
+        name: inception
+        driver: bridge
+

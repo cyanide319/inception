@@ -1,12 +1,19 @@
 
 
 FROM		alpine:3.17
-RUN			apk update && apk upgrade && apk --no-cache add 	\
-							mariadb
-# RUN			rm -f /etc/nginx/nginx.conf
-# COPY		./config/nginx.conf /etc/nginx/nginx.conf
-# COPY		scripts/setup_nginx.sh /setup_nginx.sh
-# RUN			chmod -R +x /setup_nginx.sh
-# EXPOSE		443
-# ENTRYPOINT	["sh", "setup_nginx.sh"]
-# CMD 		["sleep", "infinity"]
+RUN			apk update && apk upgrade && apk --no-cache add	\
+							mariadb \
+							&& rm -rf /var/lib/apt/lists/*
+
+COPY		./tools/mariadb_config.sh /usr/local/bin/
+#COPY		./tools/mysql_setup.sql /var/lib/mysql/
+COPY		./tools/my.cnf /etc/my.cnf.d
+
+RUN			sed -i 's/\r//g' /usr/local/bin/mariadb_config.sh
+#RUN			sed -i 's/\r//g' /var/lib/mysql/mysql_setup.sql
+
+RUN 		chmod +x /usr/local/bin/mariadb_config.sh
+
+EXPOSE 		3306	
+
+CMD 		["/bin/sh", "/usr/local/bin/mariadb_config.sh"]
