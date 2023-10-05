@@ -1,37 +1,37 @@
 
 
-#FROM		alpine:3.17
-#RUN			apk update && apk upgrade && apk --no-cache add		\
-#							php \
-#							php81 \
-#							php-mysqli \
-#							php-fpm \
-#							mariadb-client
+FROM		alpine:3.17
+RUN			apk update && apk upgrade && apk --no-cache add		\
+							php \
+							php81 \
+							php-mysqli \
+							php-fpm \
+							mariadb-client
 
-#EXPOSE 		9000
+EXPOSE 		9000
 
-#COPY 		./conf/www.conf /etc/php81/php-fpm.d/
-#COPY 		./tools/wordpress_setup.sh /var/www/
+COPY 		./conf/www.conf /etc/php81/php-fpm.d/
+COPY 		./tools/wordpress_setup.sh /var/www/
 
-#RUN			sed -i 's/\r//g' /var/www/wordpress_setup.sh
-#RUN			chmod +x /var/www/wordpress_setup.sh
+RUN			sed -i 's/\r//g' /var/www/wordpress_setup.sh
+RUN			chmod +x /var/www/wordpress_setup.sh
 
-#CMD	["/bin/sh", "/var/www/wordpress_setup.sh", "/usr/sbin/php-fpm7.3" , "--nodeamonize"]
+CMD	["/bin/sh", "/var/www/wordpress_setup.sh", "/usr/sbin/php-fpm7.3" , "--nodeamonize"]
 
 
 
-FROM debian:buster
+#FROM debian:buster
 
-RUN apt-get update
-RUN apt-get -y install php7.3 php-mysqli php-fpm wget sendmail mariadb-client
+#RUN apt-get update
+#RUN apt-get -y install php7.3 php-mysqli php-fpm wget sendmail mariadb-client
 
-EXPOSE 9000
+#EXPOSE 9000
 
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
-COPY ./tools/wordpress_start.sh /var/www/
+#COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
+#COPY ./tools/wordpress_start.sh /var/www/
 
-RUN chmod +x /var/www/wordpress_start.sh
+#RUN chmod +x /var/www/wordpress_start.sh
 
-ENTRYPOINT [ "/var/www/wordpress_start.sh" ]
+#ENTRYPOINT [ "/var/www/wordpress_start.sh" ]
 
-CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
+#CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
