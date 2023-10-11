@@ -7,14 +7,15 @@ services:
       dockerfile: dockerfile
     image: nginx-inception
     container_name: nginx-inception
+    env_file: .env
     ports:
       - "443:443"
-    environment:
-      - .env
     volumes:
-      - ./requirements/wordpress/volume/www/:/var/www/html/
+      - wordpress_vlm:/var/www/html/
     networks:
       - inception
+    depends_on:
+      - wordpress
     restart: always
 
   mariadb:
@@ -23,10 +24,9 @@ services:
       dockerfile: dockerfile
     image: mariadb-inception
     container_name: mariadb-inception
-    environment:
-      - .env
+    env_file: .env
     volumes:
-      - ./requirements/mariadb/volume/:/var/lib/
+      -  mariadb_vlm:/var/lib/mysql
     networks:
       - inception
     restart: always
@@ -38,13 +38,28 @@ services:
       dockerfile: dockerfile
     image: wordpress-inception
     container_name: wordpress-inception
-    environment:
-      - .env
+    env_file: .env
     volumes:
-      - ./requirements/wordpress/volume/:/var/www/html/
+      - wordpress_vlm:/var/www/html/
     networks:
       - inception
+    depends_on:
+      - mariadb
     restart: always
+    
+volumes:
+  wordpress_vlm:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/tbeaudoi42/data/volume_wordpress
+  mariadb_vlm:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/tbeaudoi42/data/volume_mariadb
 
 networks:
     inception:
