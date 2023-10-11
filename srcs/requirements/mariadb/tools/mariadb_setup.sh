@@ -10,11 +10,15 @@ fi
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "-> (MariaDB) Installing MySQL Data Directory...";
     chown -R mysql:mysql /var/lib/mysql;
-    mysql_install_db;
-    sed -i "s/\r//g ; s/WP_DB_NAME/$WP_DB_NAME/g ; s/WP_DB_PASS/$WP_DB_PASS/g ; s/WP_DB_USER/$WP_DB_USER/g ; s/MYSQL_ROOT_PASSWORD/$MYSQL_ROOT_PASSWORD/g" /var/lib/mysql/mysql_setup.sql;
+    mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=$WP_DB_USER;
+    sed -i "s/\r//g ; s/WP_DB_NAME/$WP_DB_NAME/g ; s/WP_DB_PASS/$WP_DB_PASS/g ; s/WP_DB_USER/$WP_DB_USER/g ; s/WP_DB_ROOT_PASS/$WP_DB_ROOT_PASS/g" /usr/local/bin/mysql_setup.sql;
     echo "-> (MariaDB) Configuring MySQL...";
+	echo "WP_DB_NAME" $WP_DB_NAME
+	echo "WP_DB_PASS" $WP_DB_PASS
+	echo "WP_DB_USER" $WP_DB_USER
+	echo "WP_DB_BON_NOM" $WP_DB_ROOT_PASS
 
-    /usr/bin/mysqld --bootstrap < /var/lib/mysql/mysql_setup.sql;
+    /usr/bin/mysqld --bootstrap < /usr/local/bin/mysql_setup.sql;
     echo "-> (MariaDB) MySQL configuration done.";
 fi
 echo "-> (MariaDB) Allowing remote connections to MariaDB";

@@ -2,21 +2,25 @@
 
 FROM		alpine:3.17
 RUN			apk update && apk upgrade && apk --no-cache add		\
+							sudo \
 							php \
 							php81 \
 							php-mysqli \
 							php-fpm \
-							mariadb-client
-
+							php81-phar \
+							php81-mbstring		\
+							mariadb-client \
+							&& rm -rf /var/lib/apt/lists/*
 EXPOSE 		9000
 
-COPY 		./conf/www.conf /etc/php81/php-fpm.d/
+COPY 		./conf/www.conf /etc/php81/php-fpm.d/www.conf
 COPY 		./tools/wordpress_setup.sh /var/www/
 
 RUN			sed -i 's/\r//g' /var/www/wordpress_setup.sh
 RUN			chmod +x /var/www/wordpress_setup.sh
 
-CMD	["/bin/sh", "/var/www/wordpress_setup.sh", "/usr/sbin/php-fpm7.3" , "--nodeamonize"]
+ENTRYPOINT ["/bin/sh", "/var/www/wordpress_setup.sh"]
+CMD	["/usr/sbin/php-fpm81" , "-F", "-R"]
 
 
 
