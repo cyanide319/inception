@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 echo 'Wordpress Check MariaDB connection : '
 echo "MYSQL_HOST : $DB_HOST"
 echo "MYSQL_USER : $WP_DB_USER"

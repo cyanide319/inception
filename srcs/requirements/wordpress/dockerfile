@@ -21,3 +21,4 @@ RUN			chmod +x /var/www/wordpress_setup.sh
 
 ENTRYPOINT ["/bin/sh", "/var/www/wordpress_setup.sh"]
 CMD	["/usr/sbin/php-fpm81" , "-F", "-R"]
+
